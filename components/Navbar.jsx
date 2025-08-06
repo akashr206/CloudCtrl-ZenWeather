@@ -2,7 +2,7 @@
 import ThemeToggle from "./ThemeToggle";
 import Link from "next/link";
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 const Navbar = () => {
     const navs = [
@@ -14,10 +14,14 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     return (
         <header className="fixed top-0 my-4 w-screen px-4">
-            <nav
+            <motion.nav
+                animate={{
+                    border: isOpen ? 0 : 4,
+                }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
                 className={cn(
-                    "max-w-6xl w-full bg-background/60 backdrop-blur-lg mx-auto h-13 flex items-center px-3 transition-all justify-between",
-                    isOpen ? "rounded-t-lg" : "rounded-full border"
+                    "max-w-6xl w-full rounded-full bg-background/60 backdrop-blur-lg mx-auto h-13 flex items-center px-3 justify-between border",
+                    isOpen && "rounded-b-none rounded-t-3xl"
                 )}
             >
                 <div className="ml-5">Logo</div>
@@ -32,27 +36,48 @@ const Navbar = () => {
                             </li>
                         ))}
                     </ul>
-                    {isOpen && (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="bg-background/95 md:hidden absolute top-[52px] w-full left-0 p-4 border border-t-0 rounded-b-lg"
-                        >
-                            <ul className="flex flex-col gap-2">
-                                {navs.map((nav, ind) => (
-                                    <motion.li
-                                        key={ind}
-                                        initial={{ x: -30, opacity: 0 }}
-                                        animate={{ x: 0, opacity: 1 }}
-                                        transition={{ease : "linear", delay: ind * 0.05}}
-                                        className="opacity-85 hover:font-semibold hover:opacity-100 "
-                                    >
-                                        <Link href={nav.link}>{nav.title}</Link>
-                                    </motion.li>
-                                ))}
-                            </ul>
-                        </motion.div>
-                    )}
+                    <AnimatePresence>
+                        {isOpen && (
+                            <motion.div
+                                initial={{
+                                    opacity: 0,
+                                    borderTopLeftRadius: 40,
+                                    borderTopRightRadius: 40,
+                                }}
+                                exit={{
+                                    opacity: 0,
+                                    borderTopLeftRadius: 40,
+                                    borderTopRightRadius: 40,
+                                }}
+                                animate={{
+                                    opacity: 1,
+                                    borderTopLeftRadius: 0,
+                                    borderTopRightRadius: 0,
+                                }}
+                                transition={{ duration: 0.3 }}
+                                className="bg-background/95 md:hidden absolute top-[52px] w-full left-0 p-4 border border-t-0 rounded-b-lg"
+                            >
+                                <ul className="flex flex-col gap-2">
+                                    {navs.map((nav, ind) => (
+                                        <motion.li
+                                            key={ind}
+                                            initial={{ x: -30, opacity: 0 }}
+                                            animate={{ x: 0, opacity: 1 }}
+                                            transition={{
+                                                ease: "linear",
+                                                duration: (ind + 1) * 0.1,
+                                            }}
+                                            className="opacity-85 hover:font-semibold hover:opacity-100 "
+                                        >
+                                            <Link href={nav.link}>
+                                                {nav.title}
+                                            </Link>
+                                        </motion.li>
+                                    ))}
+                                </ul>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </nav>
                 <div className="flex items-center max-md:mr-3 justify-center">
                     <ThemeToggle></ThemeToggle>
@@ -61,20 +86,20 @@ const Navbar = () => {
                         className="md:hidden"
                     >
                         <motion.div
-                            style={{ rotate: isOpen ? 45 : 0 }}
-                            className="w-[18px] transition-all h-[1.5px] rounded-full bg-foreground"
+                            animate={{ rotate: isOpen ? 45 : 0 }}
+                            className="w-[18px] h-[1.5px] rounded-full bg-foreground"
                         ></motion.div>
                         <motion.div
-                            style={{
+                            animate={{
                                 rotate: isOpen ? -45 : 0,
                                 width: isOpen ? 18 : 14,
                                 marginTop: isOpen ? -1 : 4,
                             }}
-                            className="w-[14px] ml-auto transition-all h-[1.5px] rounded-full bg-foreground"
+                            className="w-[14px] ml-auto h-[1.5px] rounded-full bg-foreground"
                         ></motion.div>
                     </button>
                 </div>
-            </nav>
+            </motion.nav>
         </header>
     );
 };
