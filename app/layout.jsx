@@ -3,6 +3,10 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { ClerkProvider } from "@clerk/nextjs";
 import Navbar from "@/components/Navbar";
+import SmoothScroll from "@/components/SmoothScroll";
+import { LocationProvider } from "@/hooks/useLocation";
+import { Toaster } from "sonner";
+import { WeatherProvider } from "@/hooks/useWeather";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -21,14 +25,23 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
     return (
-        <ClerkProvider>
+        <ClerkProvider
+            publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+        >
             <html lang="en">
                 <body
                     className={`${geistSans.variable} ${geistMono.variable} antialiased`}
                 >
                     <ThemeProvider attribute={"class"}>
-                        <Navbar></Navbar>
-                        {children}
+                        <SmoothScroll>
+                            <LocationProvider>
+                                <WeatherProvider>
+                                    <Toaster richColors />
+                                    <Navbar></Navbar>
+                                    {children}
+                                </WeatherProvider>
+                            </LocationProvider>
+                        </SmoothScroll>
                     </ThemeProvider>
                 </body>
             </html>
