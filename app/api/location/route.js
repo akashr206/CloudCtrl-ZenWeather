@@ -7,7 +7,12 @@ export async function GET(req) {
         const lon = searchParams.get("lon");
 
         const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
+            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
+            {
+                headers: {
+                    "User-Agent": "ZenWeather/1.0 akashr6514@gmail.com",
+                },
+            }
         );
         if (res.ok) {
             const data = await res.json();
