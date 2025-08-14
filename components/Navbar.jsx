@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import UserActions from "./UserActions";
+import SettingsDialog from "./Settings";
 import { Input } from "./ui/input";
 import { Search } from "lucide-react";
 
@@ -54,7 +54,7 @@ const Navbar = () => {
                         </div>
                         <div className="flex gap-2">
                             <ThemeToggle></ThemeToggle>
-                            <UserActions></UserActions>
+                            <SettingsDialog></SettingsDialog>
                         </div>
                     </div>
                 </div>

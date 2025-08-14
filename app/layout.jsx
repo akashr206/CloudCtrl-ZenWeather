@@ -7,6 +7,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import { LocationProvider } from "@/hooks/useLocation";
 import { Toaster } from "sonner";
 import { WeatherProvider } from "@/hooks/useWeather";
+import { SettingsProvider } from "@/hooks/useSettings";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -36,9 +37,11 @@ export default function RootLayout({ children }) {
                         <SmoothScroll>
                             <LocationProvider>
                                 <WeatherProvider>
-                                    <Toaster richColors />
-                                    <Navbar></Navbar>
-                                    {children}
+                                    <SettingsProvider>
+                                        <Toaster richColors />
+                                        <Navbar></Navbar>
+                                        {children}
+                                    </SettingsProvider>
                                 </WeatherProvider>
                             </LocationProvider>
                         </SmoothScroll>

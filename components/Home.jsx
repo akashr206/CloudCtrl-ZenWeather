@@ -24,7 +24,6 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { useWeather } from "@/hooks/useWeather";
 
-
 const WeatherParticle = ({ type, delay = 0 }) => {
     const x = useMotionValue(Math.random() * window.innerWidth);
     const y = useMotionValue(-50);
@@ -91,7 +90,6 @@ const WeatherParticle = ({ type, delay = 0 }) => {
     );
 };
 
-
 const WeatherBackground = ({ condition }) => {
     const backgroundVariants = {
         sunny: {
@@ -131,7 +129,6 @@ const WeatherBackground = ({ condition }) => {
     );
 };
 
-
 const FloatingClouds = () => {
     return (
         <div className="fixed inset-0 pointer-events-none z-0">
@@ -169,17 +166,15 @@ const parseWeatherData = (data) => {
 
     const currentHour = new Date().getHours();
     const hourlyForecast =
-        forecast?.forecastday?.[0]?.hour
-            ?.slice(currentHour, currentHour + 6)
-            ?.map((hour) => ({
-                time: new Date(hour.time).toLocaleTimeString("en-US", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false,
-                }),
-                temp: Math.round(hour.temp_c),
-                condition: getConditionType(hour.condition.code, hour.is_day),
-            })) || [];
+        forecast?.forecastday?.[0]?.hour?.slice(currentHour)?.map((hour) => ({
+            time: new Date(hour.time).toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+            }),
+            temp: Math.round(hour.temp_c),
+            condition: getConditionType(hour.condition.code, hour.is_day),
+        })) || [];
 
     const weeklyForecast =
         forecast?.forecastday?.slice(0, 5)?.map((day, index) => ({
@@ -629,7 +624,7 @@ const Home = () => {
     };
 
     return (
-        <div className="min-h-screen relative overflow-hidden">
+        <div className="min-h-screen mx-auto relative overflow-hidden">
             <WeatherBackground condition={weather?.currentCondition} />
             <FloatingClouds />
 
@@ -647,11 +642,11 @@ const Home = () => {
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                className="relative z-20 max-w-6xl mx-auto p-6 space-y-10"
+                className="relative z-20  max-w-4xl w-full mx-auto p-6 space-y-10"
             >
                 <motion.div
                     variants={itemVariants}
-                    className="text-center space-y-4"
+                    className="text-center space-y-4 "
                 >
                     <motion.div
                         className="flex items-center justify-center space-x-3"
@@ -685,8 +680,8 @@ const Home = () => {
                 </motion.div>
 
                 <motion.div variants={itemVariants}>
-                    <Card className="backdrop-blur-xl bg-white/10 border-white/20 shadow-2xl overflow-hidden">
-                        <CardContent className="p-10 flex flex-row-reverse justify-around text-center relative">
+                    <Card className="backdrop-blur-xl  bg-white/10 border-white/20 shadow-2xl overflow-hidden">
+                        <CardContent className="p-10 flex flex-row-reverse max-md:flex-col justify-around text-center relative">
                             <div className="absolute top-6 right-6">
                                 <motion.button
                                     whileHover={{ scale: 1.1 }}
@@ -720,7 +715,7 @@ const Home = () => {
                                     type: "spring",
                                     stiffness: 100,
                                 }}
-                                className="my-auto"
+                                className="md:my-auto max-md:mx-auto"
                             >
                                 <WeatherIcon
                                     condition={

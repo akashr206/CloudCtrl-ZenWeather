@@ -2,9 +2,9 @@
 import { useWeather } from "@/hooks/useWeather";
 import ZLoader from "@/components/Loader";
 import { motion } from "framer-motion";
-import { useTheme } from "next-themes";
 import Home from "@/components/Home";
 import { useState, useEffect } from "react";
+
 function ZInitial() {
     const theme = localStorage.getItem("theme") || "dark";
     return (

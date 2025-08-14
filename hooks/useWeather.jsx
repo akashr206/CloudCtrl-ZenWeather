@@ -11,11 +11,10 @@ export const WeatherProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     async function getWeather(q) {
+        setLoading(true);
         try {
             const res = await fetch(`/api/weather?city=${q || city}`);
             const data = await res.json();
-            console.log(data);
-            
             setWeather(data);
         } catch (err) {
             toast.error("Failed to fetch weather");

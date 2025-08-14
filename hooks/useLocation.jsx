@@ -5,7 +5,18 @@ const locationContext = createContext();
 
 export const LocationProvider = ({ children }) => {
     const [city, setCity] = useState(null);
-    const [error, setError] = useState(null);
+
+    function saveLocation(city) {
+        const allLocations =
+            JSON.parse(localStorage.getItem("locations")) || [];
+        allLocations.push(city);
+        localStorage.setItem("locations", JSON.stringify(allLocations));
+        setCity(city);
+    }
+
+    function getLocations() {
+        return JSON.parse(localStorage.getItem("locations")) || [];
+    }
 
     useEffect(() => {
         const localLocation = localStorage.getItem("location") || "";
@@ -41,7 +52,7 @@ export const LocationProvider = ({ children }) => {
         }
     }, []);
     return (
-        <locationContext.Provider value={{ city }}>
+        <locationContext.Provider value={{ city, setCity, saveLocation, getLocations }}>
             {children}
         </locationContext.Provider>
     );
