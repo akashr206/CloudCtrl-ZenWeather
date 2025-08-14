@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Zen Weather
+![Logo](./public/logo.png "Zen Weather")
+Zen Weather is an intuitive, smooth, and interactive weather application that provides **real-time weather updates**, **forecasts**, and **customizable settings** for a truly personalized experience.  
 
-## Getting Started
+---
 
-First, run the development server:
+## ✨ Features
 
+- **Real-Time Weather Updates** – Accurate, up-to-date weather data for your location or any searched city.
+- **Interactive Weather Animations** – Dynamic icons and background effects that match current conditions.
+- **Location Management** – Add, delete, and manage multiple saved locations.
+- **Customizable Units** – Switch between Celsius/Fahrenheit, km/h or mph, and mbar or hPa.
+- **Responsive UI** – Optimized for desktop, tablet, and mobile devices.
+- **Smooth Transitions** – Beautiful animations powered by Framer Motion.
+
+---
+
+## 📂 Project Structure
+```
+zen-weather/
+├── components/
+│ ├── ui/ # UI components
+│ ├── Home.jsx # Main weather dashboard
+│ ├── Navbar.jsx # Top navigation bar
+│ ├── LocationDialog.jsx # Manage and search locations
+│ ├── Settings.jsx # User preferences dialog
+│ ├── ForecastList.jsx # Weekly forecast display
+│ └── Loader.jsx # Loading animations
+│
+├── hooks/ # Custom React hooks
+│ ├── useLocation.jsx # Manage locations & local storage
+│ ├── useSettings.jsx # Manage temperature/wind/pressure units
+│ └── useWeather.jsx # Fetch & store weather data
+│
+├── app/ # Next.js app
+│ ├── index.js # Main entry page
+│ └── api/ # Backend API routes
+│ 
+└── public/ # Static assets (icons, images)
+```
+## 🚀 Installation
+
+### Prerequisites
+- **Node.js** v16 or higher
+- **npm** or **yarn** package manager
+
+### Steps
 ```bash
+# Clone the repository
+git clone https://github.com/your-username/zen-weather.git
+cd zen-weather
+
+# Install dependencies
+npm install
+# or
+yarn install
+
+# Run development server
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+## 🖥 Usage
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 1. Weather Dashboard
+- View current weather, current forecasts, and future forecasts.
+- Animations and elements adapt to the weather conditions.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### 2. Location Management
+- Click 📍 in the navbar to open the location dialog.
+- Search for a city or pick from saved locations.
+- Add or delete saved cities.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Settings
+- Click Settings to change units:
+  - **Temperature**: Celsius / Fahrenheit
+  - **Wind Speed**: km/h / mph
+  - **Pressure**: mbar / hPa
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠 Tech Stack
+- **Next.js** – Frontend framework for server-side rendering & routing
+- **Framer Motion** – Animations
+- **Tailwind CSS** – Styling
+- **Lucide Icons** – Icons
+- **WeatherAPI** – Weather data source
+- **Nominatim API** – Reverse geocoding
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📦 Deployment
+```bash
+# Build the project
+npm run build
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Start production server
+npm start
+```
