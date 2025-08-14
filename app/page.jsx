@@ -4,6 +4,7 @@ import ZLoader from "@/components/Loader";
 import { motion } from "framer-motion";
 import Home from "@/components/Home";
 import { useState, useEffect } from "react";
+import { useLocation } from "@/hooks/useLocation";
 
 function ZInitial() {
     const theme = localStorage.getItem("theme") || "dark";
@@ -48,8 +49,9 @@ function ZInitial() {
 }
 
 export default function page() {
-    const { weather, loading } = useWeather();
+    const { loading } = useWeather();
     const [show, setShow] = useState(true);
+    const { fetching } = useLocation();
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -59,10 +61,10 @@ export default function page() {
     }, []);
 
     if (show) return <ZInitial />;
-
+    if (fetching) return <ZLoader text="Fetching Location"></ZLoader>;
+    if (loading) return <ZLoader></ZLoader>;
     return (
         <div className="bg-background flex flex-wrap gap-4">
-            {loading && <ZLoader />}
             <Home />
         </div>
     );

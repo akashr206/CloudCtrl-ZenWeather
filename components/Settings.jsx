@@ -43,14 +43,14 @@ const SettingsDialog = () => {
                     >
                         <div
                             onClick={() => setTempUnit("celsius")}
-                            className="flex items-center cursor-pointer hover:bg-card/80 transition-colors p-4 rounded-t-xl bg-card justify-between"
+                            className="flex items-center cursor-pointer hover:bg-card/80 transition-colors p-4 rounded-t-xl bg-card border-border shadow-sm justify-between"
                         >
                             <Label htmlFor="r1">celsius</Label>
                             <RadioGroupItem value="celsius" id="r1" />
                         </div>
                         <div
                             onClick={() => setTempUnit("fahrenheit")}
-                            className="flex items-center cursor-pointer hover:bg-card/80 transition-colors p-4 rounded-b-xl bg-card justify-between"
+                            className="flex items-center cursor-pointer hover:bg-card/80 transition-colors p-4 rounded-b-xl bg-card border-border shadow-sm justify-between"
                         >
                             <Label htmlFor="r2">Fahrenheit</Label>
                             <RadioGroupItem value="fahrenheit" id="r2" />
@@ -65,14 +65,14 @@ const SettingsDialog = () => {
                     >
                         <div
                             onClick={() => setWindSpeedUnit("kmh")}
-                            className="flex items-center cursor-pointer hover:bg-card/80 transition-colors p-4 rounded-t-xl bg-card justify-between"
+                            className="flex items-center cursor-pointer hover:bg-card/80 transition-colors p-4 rounded-t-xl bg-card border-border shadow-sm justify-between"
                         >
                             <Label htmlFor="r1">km/h</Label>
                             <RadioGroupItem value="kmh" id="r1" />
                         </div>
                         <div
                             onClick={() => setWindSpeedUnit("mph")}
-                            className="flex items-center cursor-pointer hover:bg-card/80 transition-colors p-4 rounded-b-xl bg-card justify-between"
+                            className="flex items-center cursor-pointer hover:bg-card/80 transition-colors p-4 rounded-b-xl bg-card border-border shadow-sm justify-between"
                         >
                             <Label htmlFor="r2">mph</Label>
                             <RadioGroupItem value="mph" id="r2" />
@@ -87,14 +87,14 @@ const SettingsDialog = () => {
                     >
                         <div
                             onClick={() => setPressureUnit("mbar")}
-                            className="flex items-center cursor-pointer hover:bg-card/80 transition-colors p-4 rounded-t-xl bg-card justify-between"
+                            className="flex items-center cursor-pointer hover:bg-card/80 transition-colors p-4 rounded-t-xl bg-card border-border shadow-sm justify-between"
                         >
                             <Label htmlFor="r1">mbar</Label>
                             <RadioGroupItem value="mbar" id="r1" />
                         </div>
                         <div
                             onClick={() => setPressureUnit("hPa")}
-                            className="flex items-center cursor-pointer hover:bg-card/80 transition-colors p-4 rounded-b-xl bg-card justify-between"
+                            className="flex items-center cursor-pointer hover:bg-card/80 transition-colors p-4 rounded-b-xl bg-card border-border shadow-sm justify-between"
                         >
                             <Label htmlFor="r2">hPa</Label>
                             <RadioGroupItem value="hPa" id="r2" />

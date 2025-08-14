@@ -1,7 +1,7 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTheme } from "next-themes";
-export default function ZLoader() {
+export default function ZLoader({ text = "The Zen Weather" }) {
     const { theme } = useTheme();
     return (
         <AnimatePresence>
@@ -32,7 +32,7 @@ export default function ZLoader() {
                         }}
                     />
                 </svg>
-                <p className="text-lg font-semibold">The Zen Weather</p>
+                <p className="text-lg font-semibold">{text}</p>
             </motion.div>
         </AnimatePresence>
     );

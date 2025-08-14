@@ -20,9 +20,12 @@ import {
     RefreshCw,
     Zap,
     Snowflake,
+    MoveUp as ArrowUp,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useWeather } from "@/hooks/useWeather";
+import { useSettings } from "@/hooks/useSettings";
+import ForecastList from "./ForecastList";
 
 const WeatherParticle = ({ type, delay = 0 }) => {
     const x = useMotionValue(Math.random() * window.innerWidth);
@@ -161,20 +164,39 @@ const FloatingClouds = () => {
 
 const parseWeatherData = (data) => {
     if (!data || !data.current || !data.location) return null;
-
+    const { tempUnit, windSpeedUnit, pressureUnit } = useSettings();
     const { current, location, forecast } = data;
+    console.log(data);
 
     const currentHour = new Date().getHours();
-    const hourlyForecast =
+    let hourlyForecast =
         forecast?.forecastday?.[0]?.hour?.slice(currentHour)?.map((hour) => ({
             time: new Date(hour.time).toLocaleTimeString("en-US", {
                 hour: "2-digit",
                 minute: "2-digit",
                 hour12: false,
             }),
-            temp: Math.round(hour.temp_c),
+            temp: Math.round(
+                tempUnit === "celsius" ? hour.temp_c : hour.temp_f
+            ),
             condition: getConditionType(hour.condition.code, hour.is_day),
         })) || [];
+
+    forecast?.forecastday?.[1]?.hour?.forEach((hour) => {
+        const temp = {
+            time: new Date(hour.time).toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+            }),
+            temp: Math.round(
+                tempUnit === "celsius" ? hour.temp_c : hour.temp_f
+            ),
+            condition: getConditionType(hour.condition.code, hour.is_day),
+        };
+        hourlyForecast.push(temp);
+    });
+    hourlyForecast = hourlyForecast.slice(0, 12);
 
     const weeklyForecast =
         forecast?.forecastday?.slice(0, 5)?.map((day, index) => ({
@@ -184,28 +206,44 @@ const parseWeatherData = (data) => {
                     : new Date(day.date).toLocaleDateString("en-US", {
                           weekday: "long",
                       }),
-            high: Math.round(day.day.maxtemp_c),
-            low: Math.round(day.day.mintemp_c),
+            high: Math.round(
+                tempUnit === "celsius" ? day.day.maxtemp_c : day.day.maxtemp_f
+            ),
+            low: Math.round(
+                tempUnit === "celsius" ? day.day.mintemp_c : day.day.mintemp_f
+            ),
             condition: getConditionType(day.day.condition.code, 1),
         })) || [];
 
     return {
         location: `${location.name}, ${location.country}`,
-        temperature: Math.round(current.temp_c),
+        temperature: Math.round(
+            tempUnit === "celsius" ? current.temp_c : current.temp_f
+        ),
         condition: current.condition.text,
         description: getWeatherDescription(current.condition.code),
         humidity: current.humidity,
-        windSpeed: Math.round(current.wind_kph),
+        windSpeed: Math.round(
+            windSpeedUnit === "kmh" ? current.wind_kph : current.wind_mph
+        ),
+        windDirection: Math.round(current.wind_degree),
         visibility: current.vis_km,
-        pressure: Math.round(current.pressure_mb),
+        pressure: Math.round(
+            pressureUnit === "hPa" ? current.pressure_in : current.pressure_mb
+        ),
         uvIndex: current.uv,
-        feelsLike: Math.round(current.feelslike_c),
+        feelsLike: Math.round(
+            tempUnit === "celsius" ? current.feelslike_c : current.feelslike_f
+        ),
         currentCondition: getConditionType(
             current.condition.code,
             current.is_day
         ),
         hourlyForecast,
         weeklyForecast,
+        forecast: data.forecast.forecastday,
+        sunrise: data.forecast.forecastday[0].astro.sunrise,
+        sunset: data.forecast.forecastday[0].astro.sunset,
     };
 };
 
@@ -288,7 +326,7 @@ const getWeatherDescription = (code) => {
     return descriptions[code] || "Weather conditions vary";
 };
 
-const WeatherIcon = ({ condition, size = 24, interactive = false }) => {
+export const WeatherIcon = ({ condition, size = 24, interactive = false }) => {
     const iconProps = { size, className: "text-slate-700" };
 
     const iconVariants = {
@@ -415,6 +453,7 @@ const WeatherIcon = ({ condition, size = 24, interactive = false }) => {
 };
 
 const StatCard = ({
+    children,
     icon: Icon,
     label,
     value,
@@ -423,19 +462,18 @@ const StatCard = ({
     interactive = true,
 }) => {
     const cardRef = useRef(null);
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
-    const rotateX = useSpring(0);
-    const rotateY = useSpring(0);
+    const rotateX = useSpring(0, { stiffness: 150, damping: 20 });
+    const rotateY = useSpring(0, { stiffness: 150, damping: 20 });
 
     const handleMouseMove = (event) => {
-        if (!cardRef.current) return;
+        if (!interactive || !cardRef.current) return;
 
         const rect = cardRef.current.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
-        const rotateXValue = (event.clientY - centerY) / 10;
-        const rotateYValue = (centerX - event.clientX) / 10;
+
+        const rotateXValue = -(event.clientY - centerY) / 15;
+        const rotateYValue = (event.clientX - centerX) / 15;
 
         rotateX.set(rotateXValue);
         rotateY.set(rotateYValue);
@@ -471,28 +509,28 @@ const StatCard = ({
             }}
             className="cursor-pointer"
         >
-            <Card className="backdrop-blur-md bg-white/20 border-white/30 shadow-xl hover:shadow-2xl transition-shadow duration-300">
-                <CardContent className="p-6">
+            <Card className="backdrop-blur-md w-[190px] max-md:w-[156px] h-[200px] p-2 bg-white/20 border-white/30 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                <CardContent className="p-0 items-center flex flex-col">
                     <motion.div
-                        className="flex items-center space-x-4"
+                        className="flex gap-2 items-start mt-2 ml-2 mr-auto"
                         style={{ transform: "translateZ(20px)" }}
                     >
                         <motion.div
-                            className="p-3 rounded-xl bg-white/20 backdrop-blur-sm"
+                            className=" p-1 rounded-xl mt-1 bg-white/20 backdrop-blur-sm"
                             whileHover={{ rotate: 360 }}
                             transition={{ duration: 0.6 }}
                         >
-                            <Icon size={24} className=" drop-shadow-lg" />
+                            <Icon size={16} className=" drop-shadow-lg" />
                         </motion.div>
                         <div>
                             <motion.p
-                                className="text-sm /80 font-medium mb-1"
+                                className="text-sm font-medium"
                                 style={{ transform: "translateZ(10px)" }}
                             >
                                 {label}
                             </motion.p>
                             <motion.p
-                                className="text-2xl font-bold  drop-shadow-lg"
+                                className="text-sm drop-shadow-lg"
                                 style={{ transform: "translateZ(15px)" }}
                             >
                                 {value}
@@ -500,6 +538,7 @@ const StatCard = ({
                             </motion.p>
                         </div>
                     </motion.div>
+                    <div className="my-4 mx-auto ">{children}</div>
                 </CardContent>
             </Card>
         </motion.div>
@@ -563,11 +602,82 @@ const HourlyForecastCard = ({ hour, delay }) => (
     </motion.div>
 );
 
+const HumidityChild = ({ value }) => {
+    return (
+        <div className="w-[100px] flex items-center justify-center h-[100px] border border-foreground rounded-full">
+            <motion.div
+                initial={{ width: 0 }}
+                className="bg-foreground aspect-square rounded-full"
+                animate={{ width: value }}
+                transition={{ delay: 0.7 }}
+            ></motion.div>
+        </div>
+    );
+};
+
+const WindChild = ({ value }) => {
+    return (
+        <div className="w-[100px] flex items-center justify-center h-[100px] border border-foreground rounded-full relative">
+            <p className="absolute -top-3 bg-card/60 backdrop-blur-2xl">N</p>
+            <motion.div
+                initial={{ rotate: 0 }}
+                animate={{ rotate: value > 180 ? 180 - value : value }}
+                transition={{ delay: 0.7, duration: 0.7 }}
+            >
+                <ArrowUp
+                    size={24}
+                    className="scale-y-150 h-[80px] w-[30px]"
+                ></ArrowUp>
+            </motion.div>
+        </div>
+    );
+};
+
+const VisiChild = () => {
+    return (
+        <div className="w-24 h-24 relative flex flex-col justify-around ">
+            <motion.div
+                initial={{ rotate: 0 }}
+                animate={{ rotate: -30 }}
+                transition={{ delay: 0.7, duration: 0.7 }}
+                className="border border-foreground w-full"
+            ></motion.div>
+            <motion.div
+                initial={{ rotate: 0 }}
+                animate={{ rotate: 30 }}
+                transition={{ delay: 0.7, duration: 0.7 }}
+                className="border w-full border-foreground"
+            ></motion.div>
+            <motion.div
+                initial={{ height: 0 }}
+                animate={{ height: 64 }}
+                transition={{ delay: 0.7, duration: 0.7 }}
+                className="border-r-3  border-foreground left-6 rounded-full w-16 border-dotted absolute"
+            ></motion.div>
+        </div>
+    );
+};
+
+const PreChild = () => {
+    return (
+        <div className="h-24 w-24 flex items-center rounded-full border justify-center border-foreground">
+            <motion.div
+                initial={{ rotate: 0 }}
+                animate={{ rotate: 360 }}
+                transition={{ delay: 0.7, duration: 1 }}
+                className="w-20 h-20 flex relative rounded-full"
+            >
+                <div className="w-4 h-4 absolute left-1/2 -translate-x-1/2 rounded-full bg-foreground"></div>
+            </motion.div>
+        </div>
+    );
+};
+
 const Home = () => {
     const { weather: rawWeather, getWeather } = useWeather();
     const [refreshing, setRefreshing] = useState(false);
     const [particles, setParticles] = useState([]);
-
+    const { tempUnit, windSpeedUnit, pressureUnit } = useSettings();
     const weather = rawWeather ? parseWeatherData(rawWeather) : null;
 
     useEffect(() => {
@@ -595,7 +705,7 @@ const Home = () => {
 
     const handleRefresh = async () => {
         setRefreshing(true);
-        await getWeather("kashmir");
+        await getWeather();
         setRefreshing(false);
     };
 
@@ -662,7 +772,7 @@ const Home = () => {
                             <MapPin size={20} className=" drop-shadow-lg" />
                         </motion.div>
                         <span className="text-lg font-semibold  drop-shadow-lg">
-                            {weather?.location || "Loading..."}
+                            {weather?.location || "----"}
                         </span>
                     </motion.div>
                     <motion.h1
@@ -769,35 +879,45 @@ const Home = () => {
                 </motion.div>
 
                 <motion.div variants={itemVariants}>
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="flex justify-center gap-6 flex-wrap">
                         <StatCard
                             icon={Droplets}
                             label="Humidity"
                             value={weather?.humidity || "--"}
                             unit="%"
                             delay={0.2}
-                        />
+                        >
+                            <HumidityChild
+                                value={weather?.humidity || "--"}
+                            ></HumidityChild>
+                        </StatCard>
                         <StatCard
                             icon={Wind}
                             label="Wind Speed"
                             value={weather?.windSpeed || "--"}
-                            unit="km/h"
+                            unit={windSpeedUnit}
                             delay={0.3}
-                        />
+                        >
+                            <WindChild value={weather?.windDirection} />
+                        </StatCard>
                         <StatCard
                             icon={Eye}
                             label="Visibility"
                             value={weather?.visibility || "--"}
-                            unit="km"
+                            unit={windSpeedUnit === "kmh" ? "km" : "mile"}
                             delay={0.4}
-                        />
+                        >
+                            <VisiChild></VisiChild>
+                        </StatCard>
                         <StatCard
                             icon={Gauge}
                             label="Pressure"
                             value={weather?.pressure || "--"}
-                            unit="mb"
+                            unit={pressureUnit}
                             delay={0.5}
-                        />
+                        >
+                            <PreChild />
+                        </StatCard>
                     </div>
                 </motion.div>
                 <motion.div variants={itemVariants}>
@@ -834,6 +954,9 @@ const Home = () => {
                             ))}
                     </div>
                 </motion.div>
+                <ForecastList
+                    weeklyForecast={weather?.weeklyForecast}
+                ></ForecastList>
             </motion.div>
         </div>
     );
