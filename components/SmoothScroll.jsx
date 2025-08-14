@@ -1,8 +1,10 @@
 "use client";
 import Lenis from "lenis";
-import { useEffect, useRef } from "react";
+import { createContext, useContext, useEffect, useRef } from "react";
 
-const useLenis = () => {
+const LenisContext = createContext(null);
+
+const LenisProvider = ({ children }) => {
     const lenisRef = useRef(null);
 
     useEffect(() => {
@@ -25,13 +27,17 @@ const useLenis = () => {
         };
     }, []);
 
-    return lenisRef;
+    return (
+        <LenisContext.Provider value={lenisRef}>
+            <main className="pt-[80px]">{children}</main>
+        </LenisContext.Provider>
+    );
+};
+export const useLenisInstance = () => {
+    const ctx = useContext(LenisContext);
+    if (!ctx)
+        throw new Error("useLenisInstance must be used inside LenisProvider");
+    return ctx;
 };
 
-const SmoothScroll = ({ children }) => {
-    useLenis();
-
-    return <main className="pt-[80px]">{children}</main>;
-};
-
-export default SmoothScroll;
+export default LenisProvider;

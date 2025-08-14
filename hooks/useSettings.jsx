@@ -6,7 +6,7 @@ const SettingsContext = createContext();
 export function SettingsProvider({ children }) {
     const [tempUnit, setTempUnit] = useState("celsius");
     const [windSpeedUnit, setWindSpeedUnit] = useState("kmh");
-    const [pressureUnit, setPressureUnit] = useState("hPa");
+    const [pressureUnit, setPressureUnit] = useState("mbar");
 
     const value = {
         tempUnit,

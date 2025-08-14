@@ -5,17 +5,35 @@ const locationContext = createContext();
 
 export const LocationProvider = ({ children }) => {
     const [city, setCity] = useState(null);
+    const [fetching, setFetching] = useState(false);
 
+    function getCurrentLocation() {
+        return localStorage.getItem("location") || "";
+    }
     function saveLocation(city) {
-        const allLocations =
-            JSON.parse(localStorage.getItem("locations")) || [];
+        let allLocations = JSON.parse(localStorage.getItem("locations")) || [];
         allLocations.push(city);
+        allLocations = [...new Set(allLocations)];
         localStorage.setItem("locations", JSON.stringify(allLocations));
         setCity(city);
     }
 
     function getLocations() {
-        return JSON.parse(localStorage.getItem("locations")) || [];
+        console.log([
+            ...new Set(JSON.parse(localStorage.getItem("locations")) || []),
+        ]);
+
+        return [
+            ...new Set(JSON.parse(localStorage.getItem("locations")) || []),
+        ];
+    }
+
+    function deleteLocation(city) {
+        const allLocations = getLocations();
+        const filteredLocations = allLocations.filter(
+            (location) => location !== city
+        );
+        localStorage.setItem("locations", JSON.stringify(filteredLocations));
     }
 
     useEffect(() => {
@@ -25,7 +43,7 @@ export const LocationProvider = ({ children }) => {
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
                     const { latitude, longitude } = position.coords;
-
+                    setFetching(true);
                     try {
                         const res = await fetch(
                             `/api/location?lat=${latitude}&lon=${longitude}`
@@ -42,17 +60,37 @@ export const LocationProvider = ({ children }) => {
                     } catch (err) {
                         toast.error("Failed to fetch your city, try again");
                     }
+                    setFetching(false);
                 },
                 (err) => {
-                    toast.error(err.message);
+                    const temp =
+                        JSON.parse(localStorage.getItem("locations")) || [];
+
+                    if (temp.length > 0) setCity(temp[0]);
+                    else
+                        toast.error(
+                            "Permission denied. Please enter your location manually"
+                        );
+                    setFetching(false);
                 }
             );
         } else {
             toast.error("No geo location found please enter the city manually");
+            setFetching(false);
         }
     }, []);
     return (
-        <locationContext.Provider value={{ city, setCity, saveLocation, getLocations }}>
+        <locationContext.Provider
+            value={{
+                city,
+                setCity,
+                saveLocation,
+                getLocations,
+                deleteLocation,
+                getCurrentLocation,
+                fetching,
+            }}
+        >
             {children}
         </locationContext.Provider>
     );

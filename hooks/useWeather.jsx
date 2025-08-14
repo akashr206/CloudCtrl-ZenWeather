@@ -12,6 +12,8 @@ export const WeatherProvider = ({ children }) => {
 
     async function getWeather(q) {
         setLoading(true);
+        console.log("city", city);
+
         try {
             const res = await fetch(`/api/weather?city=${q || city}`);
             const data = await res.json();
@@ -26,6 +28,8 @@ export const WeatherProvider = ({ children }) => {
     useEffect(() => {
         if (city) {
             getWeather(city);
+        } else {
+            setLoading(false);
         }
     }, [city]);
 
