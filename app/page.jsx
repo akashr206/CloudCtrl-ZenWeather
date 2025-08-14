@@ -22,8 +22,8 @@ function ZInitial() {
                 animate={{ scale: 80 }}
                 transition={{
                     delay: 1.3,
-                    duration: 2.5,
-                    ease: "linear",
+                    duration: 1.7,
+                    ease: "easeOut",
                 }}
             >
                 <svg
