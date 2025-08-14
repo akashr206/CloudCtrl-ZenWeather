@@ -20,8 +20,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-    title: "Team Arise",
-    description: "Team Arise's Codefury project",
+    title: "Zen Weather",
+    description: "An intuitive, smooth and interactive weather app.",
 };
 
 export default function RootLayout({ children }) {

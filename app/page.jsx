@@ -7,7 +7,10 @@ import { useState, useEffect } from "react";
 import { useLocation } from "@/hooks/useLocation";
 
 function ZInitial() {
-    const theme = localStorage.getItem("theme") || "dark";
+    const theme =
+        typeof window !== "undefined"
+            ? localStorage.getItem("theme") || "dark"
+            : "dark";
     return (
         <motion.div
             animate={{ opacity: 0 }}
@@ -19,8 +22,8 @@ function ZInitial() {
                 animate={{ scale: 80 }}
                 transition={{
                     delay: 1.3,
-                    duration: 2,
-                    ease: "easeOut",
+                    duration: 2.5,
+                    ease: "linear",
                 }}
             >
                 <svg

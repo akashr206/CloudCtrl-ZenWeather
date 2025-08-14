@@ -8,6 +8,7 @@ export const LocationProvider = ({ children }) => {
     const [fetching, setFetching] = useState(false);
 
     function getCurrentLocation() {
+        if (typeof window === "undefined") return "";
         return localStorage.getItem("location") || "";
     }
     function saveLocation(city) {
@@ -19,10 +20,7 @@ export const LocationProvider = ({ children }) => {
     }
 
     function getLocations() {
-        console.log([
-            ...new Set(JSON.parse(localStorage.getItem("locations")) || []),
-        ]);
-
+        if (typeof window === "undefined") return "";
         return [
             ...new Set(JSON.parse(localStorage.getItem("locations")) || []),
         ];
