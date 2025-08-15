@@ -70,16 +70,16 @@ function Meter({ value = 0 }) {
 
 function StatChip({ icon: Icon, label, value, unit }) {
     return (
-        <div className="group flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white/90 backdrop-blur-md transition hover:bg-white/10">
+        <div className="group flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-foreground/90 backdrop-blur-md transition hover:bg-white/10">
             <div className="grid h-9 w-9 place-items-center rounded-lg bg-white/10">
                 <Icon className="h-4 w-4" />
             </div>
             <div className="min-w-0">
-                <div className="truncate text-xs text-white/70">{label}</div>
+                <div className="truncate text-xs text-foreground/70">{label}</div>
                 <div className="flex items-baseline gap-1">
                     <span className="text-base font-semibold">{value}</span>
                     {unit ? (
-                        <span className="text-xs text-white/60">{unit}</span>
+                        <span className="text-xs text-foreground/60">{unit}</span>
                     ) : null}
                 </div>
             </div>
@@ -113,14 +113,14 @@ function CategoryPill({ label }) {
     };
     const Icon = iconMap[label] || Gauge;
     return (
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs text-white/90 backdrop-blur">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs text-foreground/90 backdrop-blur">
             <Icon className="h-3.5 w-3.5" />
             {label}
         </span>
     );
 }
 
-export default function AirQualityCard({ wind, updatedAt = Date.now(), data }) {
+export default function AirQualityCard({ wind, data }) {
     const aqi = data ? data["us-epa-index"] : 0;
     const info = useAQIInfo(aqi);
     console.log(data);
@@ -128,7 +128,7 @@ export default function AirQualityCard({ wind, updatedAt = Date.now(), data }) {
     return (
         <>
             <div>
-                <div className="relative overflow-hidden rounded-2xl border border-white/15 bg-white/10 p-5 text-white shadow-2xl backdrop-blur-xl">
+                <div className="relative overflow-hidden rounded-2xl border border-white/15 bg-white/10 p-5 text-foreground shadow-2xl backdrop-blur-xl">
                     <GlowBlob gradient={info.color} />
                     <motion.div
                         initial={{ opacity: 0, y: 12 }}
@@ -137,7 +137,7 @@ export default function AirQualityCard({ wind, updatedAt = Date.now(), data }) {
                         className="relative z-10"
                     >
                         <div className="mb-4 flex items-center justify-between">
-                            <div className="text-xs uppercase tracking-wide text-white/60">
+                            <div className="text-xs uppercase tracking-wide text-accent-foreground/60">
                                 Air Quality Index
                             </div>
                             <CategoryPill label={info.label} />
@@ -149,16 +149,16 @@ export default function AirQualityCard({ wind, updatedAt = Date.now(), data }) {
                                     <div className="text-6xl font-extrabold leading-none drop-shadow">
                                         {aqi}
                                     </div>
-                                    <div className="pb-2 text-sm text-white/70">
+                                    <div className="pb-2 text-sm text-accent-foreground">
                                         / 500
                                     </div>
                                 </div>
                                 <div className="mt-3">
                                     <Meter value={aqi} />
                                 </div>
-                                <div className="mt-2 text-sm text-white/80">
+                                <div className="mt-2 text-sm text-foreground/80">
                                     Dominant pollutant:{" "}
-                                    <span className="font-medium text-white">
+                                    <span className="font-medium text-foreground">
                                         PM2.5
                                     </span>
                                 </div>
@@ -166,7 +166,7 @@ export default function AirQualityCard({ wind, updatedAt = Date.now(), data }) {
 
                             <div className="col-span-1 hidden sm:block">
                                 <div className="flex h-full flex-col justify-end">
-                                    <div className="mb-1 text-xs text-white/60">
+                                    <div className="mb-1 text-xs text-foreground/60">
                                         Wind
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -175,7 +175,7 @@ export default function AirQualityCard({ wind, updatedAt = Date.now(), data }) {
                                         </div>
                                         <div className="text-base font-semibold">
                                             {wind}
-                                            <span className="ml-1 text-xs text-white/70">
+                                            <span className="ml-1 text-xs text-foreground/70">
                                                 km/h
                                             </span>
                                         </div>
@@ -188,7 +188,7 @@ export default function AirQualityCard({ wind, updatedAt = Date.now(), data }) {
                             <StatChip
                                 icon={Leaf}
                                 label="PM2.5"
-                                value={data.pm_25}
+                                value={data.pm2_5}
                                 unit="µg/m³"
                             />
                             <StatChip

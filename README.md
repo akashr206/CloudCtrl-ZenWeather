@@ -26,6 +26,7 @@ zen-weather/
 │ ├── LocationDialog.jsx # Manage and search locations
 │ ├── Settings.jsx # User preferences dialog
 │ ├── ForecastList.jsx # Weekly forecast display
+│ ├── AQI.jsx # Air Quality Index display
 │ └── Loader.jsx # Loading animations
 │
 ├── hooks/ # Custom React hooks
