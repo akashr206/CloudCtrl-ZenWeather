@@ -5,7 +5,7 @@ import Home from "@/components/Home";
 import { useState, useEffect } from "react";
 import { useLocation } from "@/hooks/useLocation";
 import ZInitial from "@/components/ZInitial";
-
+import Orb from "@/components/background/Orb/Orb";
 
 export default function page() {
     const { loading } = useWeather();
@@ -24,6 +24,9 @@ export default function page() {
     if (loading) return <ZLoader></ZLoader>;
     return (
         <div className="bg-background flex flex-wrap gap-4">
+            <div className="opacity-60 ">
+                <Orb></Orb>
+            </div>
             <Home />
         </div>
     );

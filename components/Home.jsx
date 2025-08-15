@@ -26,6 +26,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useWeather } from "@/hooks/useWeather";
 import { useSettings } from "@/hooks/useSettings";
 import ForecastList from "./ForecastList";
+import AirQualityCard from "./AQI";
 
 const WeatherParticle = ({ type, delay = 0 }) => {
     const x = useMotionValue(Math.random() * window.innerWidth);
@@ -214,6 +215,7 @@ const parseWeatherData = (data) => {
             ),
             condition: getConditionType(day.day.condition.code, 1),
         })) || [];
+    console.log("current ", current);
 
     return {
         location: `${location.name}, ${location.country}`,
@@ -244,6 +246,7 @@ const parseWeatherData = (data) => {
         forecast: data.forecast.forecastday,
         sunrise: data.forecast.forecastday[0].astro.sunrise,
         sunset: data.forecast.forecastday[0].astro.sunset,
+        air: current.air_quality,
     };
 };
 
@@ -563,8 +566,8 @@ const HourlyForecastCard = ({ hour, delay }) => (
         }}
         className="flex-shrink-0 cursor-pointer"
     >
-        <Card className="backdrop-blur-md bg-white/20 border-white/30 w-24 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-4 text-center">
+        <Card className="w-24 bg-white/0 border-none shadow-none rounded-none">
+            <CardContent className="p-4  text-center">
                 <motion.p
                     className="text-sm font-medium mb-3 /90"
                     initial={{ opacity: 0 }}
@@ -928,7 +931,7 @@ const Home = () => {
                     >
                         Today's Forecast
                     </motion.h3>
-                    <div className="flex space-x-4 overflow-x-auto pb-4">
+                    <div className="flex overflow-x-auto bg-white/20 backdrop-blur-lg rounded-xl border-white/30">
                         {weather?.hourlyForecast?.map((hour, index) => (
                             <HourlyForecastCard
                                 key={hour.time}
@@ -957,6 +960,10 @@ const Home = () => {
                 <ForecastList
                     weeklyForecast={weather?.weeklyForecast}
                 ></ForecastList>
+                <AirQualityCard
+                    wind={weather.windSpeed}
+                    data={weather.air}
+                ></AirQualityCard>
             </motion.div>
         </div>
     );

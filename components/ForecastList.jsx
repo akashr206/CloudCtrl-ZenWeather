@@ -1,4 +1,14 @@
 "use client";
+import {
+    ResponsiveContainer,
+    LineChart,
+    CartesianGrid,
+    XAxis,
+    YAxis,
+    Tooltip,
+    Legend,
+    Line,
+} from "recharts";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { WeatherIcon } from "./Home";
@@ -89,7 +99,13 @@ const ForecastList = ({ weeklyForecast }) => {
             },
         },
     };
-
+    console.log(weeklyForecast);
+    const data = weeklyForecast.map((item) => ({
+        name: item.day,
+        high: item.high,
+        low: item.low,
+    }));
+    
     return (
         <motion.div
             className="flex flex-col gap-4"
@@ -207,6 +223,22 @@ const ForecastList = ({ weeklyForecast }) => {
                     ))}
                 </motion.div>
             </AnimatePresence>
+            <div className="w-full bg-white/20 border-white/30 shadow-sm backdrop-blur-lg rounded-xl py-5 h-[300px] pr-10" >
+                <ResponsiveContainer>
+                    <LineChart
+                        data={data}
+                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Line type="monotone" dataKey="low" stroke="#8884d8" />
+                        <Line type="monotone" dataKey="high" stroke="#82ca9d" />
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
         </motion.div>
     );
 };
