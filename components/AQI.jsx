@@ -120,7 +120,7 @@ function CategoryPill({ label }) {
     );
 }
 
-export default function AirQualityCard({ wind, data }) {
+export default function AirQualityCard({ wind, data = {} }) {
     const aqi = data ? data["us-epa-index"] : 0;
     const info = useAQIInfo(aqi);
     console.log(data);

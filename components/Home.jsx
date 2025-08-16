@@ -961,8 +961,8 @@ const Home = () => {
                     weeklyForecast={weather?.weeklyForecast}
                 ></ForecastList>
                 <AirQualityCard
-                    wind={weather.windSpeed}
-                    data={weather.air}
+                    wind={weather?.windSpeed}
+                    data={weather?.air}
                 ></AirQualityCard>
             </motion.div>
         </div>

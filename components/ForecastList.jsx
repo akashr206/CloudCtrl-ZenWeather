@@ -13,7 +13,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { WeatherIcon } from "./Home";
 
-const ForecastList = ({ weeklyForecast }) => {
+const ForecastList = ({ weeklyForecast = [] }) => {
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -99,8 +99,7 @@ const ForecastList = ({ weeklyForecast }) => {
             },
         },
     };
-    console.log(weeklyForecast);
-    const data = weeklyForecast.map((item) => ({
+    const data = weeklyForecast?.map((item) => ({
         name: item.day,
         high: item.high,
         low: item.low,
